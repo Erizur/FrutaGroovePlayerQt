@@ -81,3 +81,108 @@ void MusicPlayer::on_stopButton_clicked()
     }
 }
 
+
+void MusicPlayer::on_actionOpen_Playlist_triggered()
+{
+    if (mPlayer->playbackState() == QMediaPlayer::PlayingState){
+       mPlayer->stop();
+    }
+
+    QString filename = QFileDialog::getOpenFileName(this, "Open Playlist File...", "/", "JSON Files (*.json)");
+    if(filename.isEmpty()){
+        return;
+    }
+    else{
+        QJsonDocument playlist;
+        QJsonObject pl_entry;
+        QJsonArray pl_entries;
+        QByteArray json_data;
+        QStringList song_list;
+        QFile input(filename);
+        if (input.open(QIODevice::ReadOnly | QIODevice::Text)){
+            json_data = input.readAll();
+            playlist = playlist.fromJson(json_data);
+            pl_entries = playlist.array();
+            qInfo() << pl_entries.count();
+            model = new QStringListModel;
+            for(int i=0; i< pl_entries.count(); i++){
+                pl_entry = pl_entries.at(i).toObject();
+                foreach (const QString& key, pl_entry.keys()){
+                    QJsonValue value = pl_entry.value(key);
+                    QString songEntry = value.toString();
+                    song_list << songEntry;
+                    ui->listWidget->addItem(songEntry);
+                    qInfo() << value.toString();
+                    songIndex = pl_entries.count() - pl_entries.count();
+                    maxIndex = pl_entries.count();
+                    qInfo() << songIndex;
+                }
+
+            }
+            ui->listWidget->setCurrentRow(songIndex);
+
+        }
+    }
+}
+
+
+void MusicPlayer::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
+{
+   QString selectedSong = item->text();
+   qInfo() << selectedSong;
+   mPlayer->setSource(QUrl::fromLocalFile(selectedSong));
+   mPlayer->setAudioOutput(outputDevice);
+   mPlayer->play();
+}
+
+
+void MusicPlayer::on_progressSlider_sliderPressed()
+{
+    if(mPlayer->playbackState() == QMediaPlayer::PlayingState){
+        mPlayer->pause();
+    }
+}
+
+
+void MusicPlayer::on_progressSlider_sliderReleased()
+{
+    if(mPlayer->playbackState() == QMediaPlayer::PausedState){
+        mPlayer->setPosition(ui->progressSlider->sliderPosition());
+        mPlayer->play();
+    }
+}
+
+
+void MusicPlayer::on_fowardButton_clicked()
+{
+    if(songIndex <= ui->listWidget->model()->rowCount() - 2){
+        songIndex++;
+        qInfo() << songIndex;
+        qInfo() <<  ui->listWidget->model()->rowCount() - 2;
+        ui->listWidget->setCurrentRow(songIndex);
+        QString selectedSong = ui->listWidget->currentItem()->text();
+        mPlayer->setSource(QUrl::fromLocalFile(selectedSong));
+        mPlayer->setAudioOutput(outputDevice);
+        mPlayer->play();
+    }
+    else{
+        return;
+    }
+}
+
+
+void MusicPlayer::on_rewindButton_clicked()
+{
+    if(songIndex > 0){
+        songIndex--;
+        ui->listWidget->setCurrentRow(songIndex);
+        QString selectedSong = ui->listWidget->currentItem()->text();
+        mPlayer->setSource(QUrl::fromLocalFile(selectedSong));
+        mPlayer->setAudioOutput(outputDevice);
+        mPlayer->play();
+    }
+    else{
+        return;
+    }
+}
+
