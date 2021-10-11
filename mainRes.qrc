@@ -1,5 +1,10 @@
 <RCC>
     <qresource prefix="/images">
         <file>resources/fgpNewLogo.png</file>
+        <file>resources/buttonFowardDark.png</file>
+        <file>resources/buttonPauseDark.png</file>
+        <file>resources/buttonPlayDark.png</file>
+        <file>resources/buttonRewindDark.png</file>
+        <file>resources/buttonStopDark.png</file>
     </qresource>
 </RCC>
