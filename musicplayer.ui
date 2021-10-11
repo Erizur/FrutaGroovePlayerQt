@@ -31,8 +31,12 @@
   <property name="windowTitle">
    <string>FrutaGroove Player</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="mainRes.qrc">
+    <normaloff>:/images/resources/fgpNewLogo.png</normaloff>:/images/resources/fgpNewLogo.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -266,6 +270,8 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="mainRes.qrc"/>
+ </resources>
  <connections/>
 </ui>
