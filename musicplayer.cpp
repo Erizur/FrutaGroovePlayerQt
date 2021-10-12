@@ -10,7 +10,7 @@ MusicPlayer::MusicPlayer(QWidget *parent)
     connect(mPlayer, &QMediaPlayer::mediaStatusChanged, this, &MusicPlayer::checkMediaState);
     connect(mPlayer, &QMediaPlayer::positionChanged, this, &MusicPlayer::updatePositionSlider);
     connect(mPlayer, &QMediaPlayer::durationChanged, this, &MusicPlayer::updateDuration);
-    QSettings appSettings("Erizur702", "FrutaGroove Player");
+    qInfo() << appSettings.value("volumeLevel");
     ui->volumeSlider->setValue(appSettings.value("volumeLevel").toInt());
 }
 
@@ -126,6 +126,7 @@ void MusicPlayer::on_actionOpen_Playlist_triggered()
 
             }
             ui->listWidget->setCurrentRow(songIndex);
+            mPlayer->setAudioOutput(outputDevice);
             mPlayer->setSource(QUrl::fromLocalFile(ui->listWidget->currentItem()->text()));
             isPlaylist = true;
         }
@@ -242,7 +243,7 @@ void MusicPlayer::checkMediaState(){
 
 void MusicPlayer::on_volumeSlider_sliderReleased()
 {
-    appSettings.setValue("volumeLevel", 64);
+    appSettings.setValue("volumeLevel", ui->volumeSlider->value());
     qInfo() << appSettings.value("volumeLevel");
 }
 
