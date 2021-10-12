@@ -6,5 +6,6 @@
         <file>resources/buttonPlayDark.png</file>
         <file>resources/buttonRewindDark.png</file>
         <file>resources/buttonStopDark.png</file>
+        <file>resources/noCover.png</file>
     </qresource>
 </RCC>

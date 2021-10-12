@@ -11,6 +11,7 @@ MusicPlayer::MusicPlayer(QWidget *parent)
     connect(mPlayer, &QMediaPlayer::positionChanged, this, &MusicPlayer::updatePositionSlider);
     connect(mPlayer, &QMediaPlayer::durationChanged, this, &MusicPlayer::updateDuration);
     qInfo() << appSettings.value("volumeLevel");
+    showStartupMessage();
     ui->volumeSlider->setValue(appSettings.value("volumeLevel").toInt());
 }
 
@@ -19,6 +20,30 @@ MusicPlayer::~MusicPlayer()
     delete ui;
 }
 
+//TODO: remove some debug functions that arent needed anymore
+
+//got this piece of code from qt's media player example
+
+int getRand(int min, int max){
+    unsigned int ms = static_cast<unsigned>(QDateTime::currentMSecsSinceEpoch());
+    std::mt19937 gen(ms);
+    std::uniform_int_distribution<> uid(min, max);
+    return uid(gen);
+}
+
+static QString formatTime(qint64 timeMilliSeconds)
+{
+    qint64 seconds = timeMilliSeconds / 1000;
+    const qint64 minutes = seconds / 60;
+    seconds -= minutes * 60;
+    return QStringLiteral("%1:%2")
+        .arg(minutes, 2, 10, QLatin1Char('0'))
+        .arg(seconds, 2, 10, QLatin1Char('0'));
+}
+
+void MusicPlayer::showStartupMessage(){
+    ui->statusbar->showMessage(startupMessages.at(getRand(0,5)));
+}
 
 void MusicPlayer::on_actionOpen_Song_triggered()
 {
@@ -27,6 +52,7 @@ void MusicPlayer::on_actionOpen_Song_triggered()
         return;
     }
     else{
+        fileName = QFileInfo(soundPath).fileName();
         mPlayer->setAudioOutput(outputDevice);
         mPlayer->setSource(QUrl::fromLocalFile(soundPath));
     }
@@ -66,12 +92,31 @@ void MusicPlayer::on_playButton_clicked()
 void MusicPlayer::updatePositionSlider(){
     if(mPlayer->playbackState() == QMediaPlayer::PlayingState){
         ui->progressSlider->setValue(mPlayer->position());
+        ui->statusbar->showMessage(formatTime(mPlayer->position()) + " / " + formatTime(mPlayer->duration()));
     }
 }
 
 void MusicPlayer::updateDuration(){
     ui->progressSlider->setMaximum(mPlayer->duration());
 }
+
+void MusicPlayer::updateInfo()
+{
+    QStringList info;
+    if (!fileName.isEmpty())
+        info.append(fileName);
+    if (mPlayer->isMetaDataAvailable()) {
+        QString author = mPlayer->metaData(QStringLiteral("Author")).toString();
+        if (!author.isEmpty())
+            info.append(author);
+        QString title = mPlayer->metaData(QStringLiteral("Title")).toString();
+        if (!title.isEmpty())
+            info.append(title);
+    }
+    info.append(formatTime(mPlayer->duration()));
+    ui->songName->setText(info.join(tr(" - ")));
+}
+
 
 void MusicPlayer::on_volumeSlider_valueChanged(int value)
 {

@@ -53,6 +53,10 @@ private slots:
 
     void checkMediaState();
 
+    void showStartupMessage();
+
+    void updateInfo();
+
     void on_volumeSlider_sliderReleased();
 
 private:
@@ -64,5 +68,7 @@ private:
     qint64 songIndex;
     qint64 maxIndex;
     QSettings appSettings;
+    QString fileName;
+    QStringList startupMessages = {"Teh Bezt Musik!", "What Are You Looking At?!?", "Cherryapple fans, rise up!", "ERROR: NO ERROR", "Long Live The FGP!", "Huh?!!?"};
 };
 #endif // MUSICPLAYER_H
