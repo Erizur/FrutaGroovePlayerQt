@@ -7,8 +7,11 @@ MusicPlayer::MusicPlayer(QWidget *parent)
 {
     ui->setupUi(this);
     connect(mPlayer, &QMediaPlayer::playbackStateChanged, this, &MusicPlayer::checkPlaybackState);
+    connect(mPlayer, &QMediaPlayer::mediaStatusChanged, this, &MusicPlayer::checkMediaState);
     connect(mPlayer, &QMediaPlayer::positionChanged, this, &MusicPlayer::updatePositionSlider);
     connect(mPlayer, &QMediaPlayer::durationChanged, this, &MusicPlayer::updateDuration);
+    QSettings appSettings("Erizur702", "FrutaGroove Player");
+    ui->volumeSlider->setValue(appSettings.value("volumeLevel").toInt());
 }
 
 MusicPlayer::~MusicPlayer()
@@ -80,6 +83,7 @@ void MusicPlayer::on_stopButton_clicked()
 {
     if(mPlayer->playbackState() == QMediaPlayer::PlayingState || mPlayer->playbackState() == QMediaPlayer::PausedState){
         mPlayer->stop();
+        ui->progressSlider->setValue(0);
     }
 }
 
@@ -123,6 +127,7 @@ void MusicPlayer::on_actionOpen_Playlist_triggered()
             }
             ui->listWidget->setCurrentRow(songIndex);
             mPlayer->setSource(QUrl::fromLocalFile(ui->listWidget->currentItem()->text()));
+            isPlaylist = true;
         }
     }
 }
@@ -142,49 +147,67 @@ void MusicPlayer::on_progressSlider_sliderPressed()
 {
     if(mPlayer->playbackState() == QMediaPlayer::PlayingState){
         mPlayer->pause();
+        outputDevice->setVolume(0);
     }
 }
 
 
 void MusicPlayer::on_progressSlider_sliderReleased()
 {
-    if(mPlayer->playbackState() == QMediaPlayer::PausedState || mPlayer->playbackState() == QMediaPlayer::PlayingState){
-        mPlayer->setPosition(ui->progressSlider->value());
-        mPlayer->play();
+    if(mPlayer->mediaStatus() != QMediaPlayer::NoMedia){
+        if(mPlayer->playbackState() == QMediaPlayer::PausedState || mPlayer->playbackState() == QMediaPlayer::PlayingState ){
+            float floatVolume = (float)ui->volumeSlider->value() / 100;
+            outputDevice->setVolume(floatVolume);
+            mPlayer->play();
+        }
+        else if(mPlayer->playbackState() == QMediaPlayer::StoppedState && ui->progressSlider->value() != ui->progressSlider->maximum()){
+            float floatVolume = (float)ui->volumeSlider->value() / 100;
+            outputDevice->setVolume(floatVolume);
+            mPlayer->play();
+        }
+        else if(mPlayer->playbackState() == QMediaPlayer::StoppedState){
+            float floatVolume = (float)ui->volumeSlider->value() / 100;
+            outputDevice->setVolume(floatVolume);
+            mPlayer->stop();
+        }
     }
 }
 
 
 void MusicPlayer::on_fowardButton_clicked()
 {
-    if(songIndex <= ui->listWidget->model()->rowCount() - 2){
-        songIndex++;
-        qInfo() << songIndex;
-        qInfo() <<  ui->listWidget->model()->rowCount() - 2;
-        ui->listWidget->setCurrentRow(songIndex);
-        QString selectedSong = ui->listWidget->currentItem()->text();
-        mPlayer->setSource(QUrl::fromLocalFile(selectedSong));
-        mPlayer->setAudioOutput(outputDevice);
-        mPlayer->play();
-    }
-    else{
-        return;
+    if(isPlaylist == true){
+        if(songIndex <= ui->listWidget->model()->rowCount() - 2){
+            songIndex++;
+            qInfo() << songIndex;
+            qInfo() <<  ui->listWidget->model()->rowCount() - 2;
+            ui->listWidget->setCurrentRow(songIndex);
+            QString selectedSong = ui->listWidget->currentItem()->text();
+            mPlayer->setSource(QUrl::fromLocalFile(selectedSong));
+            mPlayer->setAudioOutput(outputDevice);
+            mPlayer->play();
+        }
+        else{
+            return;
+        }
     }
 }
 
 
 void MusicPlayer::on_rewindButton_clicked()
 {
-    if(songIndex > 0){
-        songIndex--;
-        ui->listWidget->setCurrentRow(songIndex);
-        QString selectedSong = ui->listWidget->currentItem()->text();
-        mPlayer->setSource(QUrl::fromLocalFile(selectedSong));
-        mPlayer->setAudioOutput(outputDevice);
-        mPlayer->play();
-    }
-    else{
-        return;
+    if(isPlaylist == true){
+        if(songIndex > 0){
+            songIndex--;
+            ui->listWidget->setCurrentRow(songIndex);
+            QString selectedSong = ui->listWidget->currentItem()->text();
+            mPlayer->setSource(QUrl::fromLocalFile(selectedSong));
+            mPlayer->setAudioOutput(outputDevice);
+            mPlayer->play();
+        }
+        else{
+            return;
+        }
     }
 }
 
@@ -194,5 +217,32 @@ void MusicPlayer::on_progressSlider_sliderMoved(int position)
     if(mPlayer->playbackState() == QMediaPlayer::PausedState || mPlayer->playbackState() == QMediaPlayer::PlayingState){
         mPlayer->setPosition(position);
     }
+}
+
+void MusicPlayer::checkMediaState(){
+    if(mPlayer->mediaStatus() == QMediaPlayer::EndOfMedia){
+        if(isPlaylist == true){
+            if(songIndex <= ui->listWidget->model()->rowCount() - 2){
+                songIndex++;
+                qInfo() << songIndex;
+                qInfo() <<  ui->listWidget->model()->rowCount() - 2;
+                ui->listWidget->setCurrentRow(songIndex);
+                QString selectedSong = ui->listWidget->currentItem()->text();
+                mPlayer->setSource(QUrl::fromLocalFile(selectedSong));
+                mPlayer->setAudioOutput(outputDevice);
+                mPlayer->play();
+            }
+            else{
+                mPlayer->stop();
+            }
+        }
+    }
+}
+
+
+void MusicPlayer::on_volumeSlider_sliderReleased()
+{
+    appSettings.setValue("volumeLevel", 64);
+    qInfo() << appSettings.value("volumeLevel");
 }
 

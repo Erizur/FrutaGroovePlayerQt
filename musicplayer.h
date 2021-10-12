@@ -51,12 +51,18 @@ private slots:
 
     void on_progressSlider_sliderMoved(int position);
 
+    void checkMediaState();
+
+    void on_volumeSlider_sliderReleased();
+
 private:
     Ui::MusicPlayer *ui;
     QMediaPlayer *mPlayer = new QMediaPlayer;
     QAudioOutput *outputDevice = new QAudioOutput;
     QStringListModel *model = new QStringListModel;
+    bool isPlaylist;
     qint64 songIndex;
     qint64 maxIndex;
+    QSettings appSettings;
 };
 #endif // MUSICPLAYER_H
