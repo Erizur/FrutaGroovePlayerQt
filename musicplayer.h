@@ -59,6 +59,8 @@ private slots:
 
     void on_volumeSlider_sliderReleased();
 
+    void on_actionPlaylists_Editor_triggered();
+
 private:
     Ui::MusicPlayer *ui;
     QMediaPlayer *mPlayer = new QMediaPlayer;

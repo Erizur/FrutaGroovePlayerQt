@@ -248,7 +248,14 @@
     <addaction name="actionAbout"/>
     <addaction name="actionCheck_for_Updates"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionPlaylists_Editor"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
@@ -279,6 +286,11 @@
   <action name="actionCheck_for_Updates">
    <property name="text">
     <string>Check for Updates</string>
+   </property>
+  </action>
+  <action name="actionPlaylists_Editor">
+   <property name="text">
+    <string>Playlists Editor</string>
    </property>
   </action>
  </widget>

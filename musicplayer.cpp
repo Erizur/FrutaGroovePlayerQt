@@ -10,6 +10,7 @@ MusicPlayer::MusicPlayer(QWidget *parent)
     connect(mPlayer, &QMediaPlayer::mediaStatusChanged, this, &MusicPlayer::checkMediaState);
     connect(mPlayer, &QMediaPlayer::positionChanged, this, &MusicPlayer::updatePositionSlider);
     connect(mPlayer, &QMediaPlayer::durationChanged, this, &MusicPlayer::updateDuration);
+    connect(mPlayer, &QMediaPlayer::metaDataChanged, this , &MusicPlayer::updateInfo);
     qInfo() << appSettings.value("volumeLevel");
     showStartupMessage();
     ui->volumeSlider->setValue(appSettings.value("volumeLevel").toInt());
@@ -103,17 +104,22 @@ void MusicPlayer::updateDuration(){
 void MusicPlayer::updateInfo()
 {
     QStringList info;
-    if (!fileName.isEmpty())
-        info.append(fileName);
-    if (mPlayer->isMetaDataAvailable()) {
-        QString author = mPlayer->metaData(QStringLiteral("Author")).toString();
-        if (!author.isEmpty())
+    if (!fileName.isEmpty()){
+        QString author = mPlayer->metaData().value(QMediaMetaData::AlbumArtist).toString();
+        if (!author.isEmpty()){
             info.append(author);
-        QString title = mPlayer->metaData(QStringLiteral("Title")).toString();
-        if (!title.isEmpty())
+        }
+        QString title = mPlayer->metaData().value(QMediaMetaData::Title).toString();
+        if (!title.isEmpty()){
             info.append(title);
+        }
+        QVariant songCover = mPlayer->metaData().value(QMediaMetaData::CoverArtImage);
+        qInfo() << songCover;
+        if (!songCover.isNull()) {
+            QImage coverImage = songCover.value<QImage>();
+            ui->coverImage->setPixmap(QPixmap::fromImage(coverImage));
+        }
     }
-    info.append(formatTime(mPlayer->duration()));
     ui->songName->setText(info.join(tr(" - ")));
 }
 
@@ -290,5 +296,11 @@ void MusicPlayer::on_volumeSlider_sliderReleased()
 {
     appSettings.setValue("volumeLevel", ui->volumeSlider->value());
     qInfo() << appSettings.value("volumeLevel");
+}
+
+
+void MusicPlayer::on_actionPlaylists_Editor_triggered()
+{
+
 }
 
