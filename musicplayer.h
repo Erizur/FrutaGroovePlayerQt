@@ -49,6 +49,8 @@ private slots:
 
     void on_rewindButton_clicked();
 
+    void on_progressSlider_sliderMoved(int position);
+
 private:
     Ui::MusicPlayer *ui;
     QMediaPlayer *mPlayer = new QMediaPlayer;

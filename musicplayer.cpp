@@ -61,7 +61,9 @@ void MusicPlayer::on_playButton_clicked()
 }
 
 void MusicPlayer::updatePositionSlider(){
-    ui->progressSlider->setValue(mPlayer->position());
+    if(mPlayer->playbackState() == QMediaPlayer::PlayingState){
+        ui->progressSlider->setValue(mPlayer->position());
+    }
 }
 
 void MusicPlayer::updateDuration(){
@@ -146,8 +148,8 @@ void MusicPlayer::on_progressSlider_sliderPressed()
 
 void MusicPlayer::on_progressSlider_sliderReleased()
 {
-    if(mPlayer->playbackState() == QMediaPlayer::PausedState){
-        mPlayer->setPosition(ui->progressSlider->sliderPosition());
+    if(mPlayer->playbackState() == QMediaPlayer::PausedState || mPlayer->playbackState() == QMediaPlayer::PlayingState){
+        mPlayer->setPosition(ui->progressSlider->value());
         mPlayer->play();
     }
 }
@@ -183,6 +185,14 @@ void MusicPlayer::on_rewindButton_clicked()
     }
     else{
         return;
+    }
+}
+
+
+void MusicPlayer::on_progressSlider_sliderMoved(int position)
+{
+    if(mPlayer->playbackState() == QMediaPlayer::PausedState || mPlayer->playbackState() == QMediaPlayer::PlayingState){
+        mPlayer->setPosition(position);
     }
 }
 
