@@ -122,7 +122,7 @@ void MusicPlayer::on_actionOpen_Playlist_triggered()
 
             }
             ui->listWidget->setCurrentRow(songIndex);
-
+            mPlayer->setSource(QUrl::fromLocalFile(ui->listWidget->currentItem()->text()));
         }
     }
 }
