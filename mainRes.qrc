@@ -7,5 +7,6 @@
         <file>resources/buttonRewindDark.png</file>
         <file>resources/buttonStopDark.png</file>
         <file>resources/noCover.png</file>
+        <file>resources/aboutFGP.png</file>
     </qresource>
 </RCC>

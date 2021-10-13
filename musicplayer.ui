@@ -36,16 +36,16 @@
     <normaloff>:/images/resources/fgpNewLogo.png</normaloff>:/images/resources/fgpNewLogo.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
+      <x>11</x>
+      <y>11</y>
       <width>330</width>
-      <height>284</height>
+      <height>286</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="mainLayout">
+    <layout class="QGridLayout" name="gridLayout_2">
      <item row="0" column="0">
       <layout class="QGridLayout" name="coverLayout">
        <item row="0" column="0">
@@ -95,56 +95,111 @@
       </layout>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="songName">
-       <property name="maximumSize">
-        <size>
-         <width>330</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>No Song Information</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <layout class="QGridLayout" name="mediaLayout">
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="songName">
+         <property name="maximumSize">
+          <size>
+           <width>330</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>No Song Information</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="0">
-        <layout class="QGridLayout" name="controlsLayout">
-         <item row="0" column="2">
-          <widget class="QPushButton" name="stopButton">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>25</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Stop</string>
-           </property>
-          </widget>
+        <layout class="QGridLayout" name="mediaLayout">
+         <item row="1" column="0">
+          <layout class="QGridLayout" name="controlsLayout">
+           <item row="0" column="2">
+            <widget class="QPushButton" name="stopButton">
+             <property name="maximumSize">
+              <size>
+               <width>50</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Stop</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QSlider" name="volumeSlider">
+             <property name="maximumSize">
+              <size>
+               <width>85</width>
+               <height>15</height>
+              </size>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>100</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QPushButton" name="rewindButton">
+             <property name="maximumSize">
+              <size>
+               <width>50</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Rewind</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="playButton">
+             <property name="maximumSize">
+              <size>
+               <width>50</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Play</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QPushButton" name="fowardButton">
+             <property name="maximumSize">
+              <size>
+               <width>50</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="baseSize">
+              <size>
+               <width>50</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Foward</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item row="0" column="0">
-          <widget class="QPushButton" name="rewindButton">
+          <widget class="QSlider" name="progressSlider">
            <property name="maximumSize">
             <size>
-             <width>50</width>
-             <height>25</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Rewind</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="4">
-          <widget class="QSlider" name="volumeSlider">
-           <property name="maximumSize">
-            <size>
-             <width>85</width>
+             <width>320</width>
              <height>15</height>
             </size>
            </property>
@@ -152,71 +207,20 @@
             <number>100</number>
            </property>
            <property name="value">
-            <number>100</number>
+            <number>0</number>
            </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <widget class="QPushButton" name="fowardButton">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>25</height>
-            </size>
+           <property name="invertedAppearance">
+            <bool>false</bool>
            </property>
-           <property name="baseSize">
-            <size>
-             <width>50</width>
-             <height>50</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Foward</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QPushButton" name="playButton">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>25</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Play</string>
+           <property name="invertedControls">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
         </layout>
-       </item>
-       <item row="0" column="0">
-        <widget class="QSlider" name="progressSlider">
-         <property name="maximumSize">
-          <size>
-           <width>320</width>
-           <height>15</height>
-          </size>
-         </property>
-         <property name="maximum">
-          <number>100</number>
-         </property>
-         <property name="value">
-          <number>0</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="invertedAppearance">
-          <bool>false</bool>
-         </property>
-         <property name="invertedControls">
-          <bool>false</bool>
-         </property>
-        </widget>
        </item>
       </layout>
      </item>

@@ -9,6 +9,7 @@
 #include <QtMultimedia/QMediaPlayer>
 #include <QtMultimedia/QAudio>
 #include <QtMultimedia/QtMultimedia>
+#include <aboutinfo.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MusicPlayer; }
@@ -61,6 +62,8 @@ private slots:
 
     void on_actionPlaylists_Editor_triggered();
 
+    void on_actionAbout_triggered();
+
 private:
     Ui::MusicPlayer *ui;
     QMediaPlayer *mPlayer = new QMediaPlayer;
@@ -71,6 +74,7 @@ private:
     qint64 maxIndex;
     QSettings appSettings;
     QString fileName;
+    aboutInfo *abInf;
     QStringList startupMessages = {"Teh Bezt Musik!", "What Are You Looking At?!?", "Cherryapple fans, rise up!", "ERROR: NO ERROR", "Long Live The FGP!", "Huh?!!?"};
 };
 #endif // MUSICPLAYER_H

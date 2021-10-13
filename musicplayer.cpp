@@ -49,6 +49,10 @@ void MusicPlayer::showStartupMessage(){
 void MusicPlayer::on_actionOpen_Song_triggered()
 {
     QString soundPath = QFileDialog::getOpenFileName(this,tr("Open Music File"), "", tr("Music Files (*.mp3 *.wav *.flac)"));
+    if(isPlaylist == true){
+        isPlaylist = false;
+        ui->listWidget->clear();
+    }
     if (soundPath == ""){
         return;
     }
@@ -302,5 +306,12 @@ void MusicPlayer::on_volumeSlider_sliderReleased()
 void MusicPlayer::on_actionPlaylists_Editor_triggered()
 {
 
+}
+
+
+void MusicPlayer::on_actionAbout_triggered()
+{
+    abInf = new aboutInfo(); // Be sure to destroy your window somewhere
+    abInf->show();
 }
 
