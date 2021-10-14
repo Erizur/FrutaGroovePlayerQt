@@ -10,6 +10,15 @@
 #include <QtMultimedia/QAudio>
 #include <QtMultimedia/QtMultimedia>
 #include <aboutinfo.h>
+#include <taglib/tag.h>
+#include <taglib/flacfile.h>
+#include <taglib/wavfile.h>
+#include <taglib/fileref.h>
+#include <taglib/id3v2tag.h>
+#include <taglib/mpegfile.h>
+#include <taglib/id3v2frame.h>
+#include <taglib/id3v2header.h>
+#include <taglib/attachedpictureframe.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MusicPlayer; }
@@ -56,6 +65,8 @@ private slots:
 
     void showStartupMessage();
 
+    void extractExtension(int fileExt);
+
     void updateInfo();
 
     void on_volumeSlider_sliderReleased();
@@ -72,7 +83,6 @@ private:
     bool isPlaylist;
     qint64 songIndex;
     qint64 maxIndex;
-    QSettings appSettings;
     QString fileName;
     aboutInfo *abInf;
     QStringList startupMessages = {"Teh Bezt Musik!", "What Are You Looking At?!?", "Cherryapple fans, rise up!", "ERROR: NO ERROR", "Long Live The FGP!", "Huh?!!?"};

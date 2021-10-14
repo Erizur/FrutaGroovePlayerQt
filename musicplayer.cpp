@@ -11,6 +11,10 @@ MusicPlayer::MusicPlayer(QWidget *parent)
     connect(mPlayer, &QMediaPlayer::positionChanged, this, &MusicPlayer::updatePositionSlider);
     connect(mPlayer, &QMediaPlayer::durationChanged, this, &MusicPlayer::updateDuration);
     connect(mPlayer, &QMediaPlayer::metaDataChanged, this , &MusicPlayer::updateInfo);
+    QSettings appSettings("AM_Erizur", "FrutaGroovePlayer");
+    if(!appSettings.value("volumeLevel").isValid()){
+        ui->volumeSlider->setValue(100);
+    }
     qInfo() << appSettings.value("volumeLevel");
     showStartupMessage();
     ui->volumeSlider->setValue(appSettings.value("volumeLevel").toInt());
@@ -105,21 +109,28 @@ void MusicPlayer::updateDuration(){
     ui->progressSlider->setMaximum(mPlayer->duration());
 }
 
+void MusicPlayer::extractExtension(int fileExt){
+
+}
+
 void MusicPlayer::updateInfo()
 {
     QStringList info;
     if (!fileName.isEmpty()){
-        QString author = mPlayer->metaData().value(QMediaMetaData::AlbumArtist).toString();
+        TagLib::FileRef f(fileName.toStdString().c_str());
+        TagLib::String artist_string = f.tag()->artist();
+        TagLib::String title_string = f.tag()->title();
+        QString author = QString::fromStdWString(artist_string.toWString());
         if (!author.isEmpty()){
             info.append(author);
         }
-        QString title = mPlayer->metaData().value(QMediaMetaData::Title).toString();
+        QString title = QString::fromStdWString(title_string.toWString());
         if (!title.isEmpty()){
             info.append(title);
         }
         QVariant songCover = mPlayer->metaData().value(QMediaMetaData::CoverArtImage);
         qInfo() << songCover;
-        if (!songCover.isNull()) {
+        if (songCover.isValid()) {
             QImage coverImage = songCover.value<QImage>();
             ui->coverImage->setPixmap(QPixmap::fromImage(coverImage));
         }
@@ -145,6 +156,9 @@ void MusicPlayer::on_stopButton_clicked()
 
 void MusicPlayer::on_actionOpen_Playlist_triggered()
 {
+    if(isPlaylist == true){
+        ui->listWidget->clear();
+    }
     if (mPlayer->playbackState() == QMediaPlayer::PlayingState){
        mPlayer->stop();
     }
@@ -298,6 +312,7 @@ void MusicPlayer::checkMediaState(){
 
 void MusicPlayer::on_volumeSlider_sliderReleased()
 {
+    QSettings appSettings("AM_Erizur", "FrutaGroovePlayer");
     appSettings.setValue("volumeLevel", ui->volumeSlider->value());
     qInfo() << appSettings.value("volumeLevel");
 }

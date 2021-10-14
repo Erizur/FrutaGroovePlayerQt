@@ -33,3 +33,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     mainRes.qrc
+
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../taglib_lib/lib/ -ltag
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../taglib_lib/lib/ -ltagd
+
+INCLUDEPATH += $$PWD/../../taglib_lib/include
+DEPENDPATH += $$PWD/../../taglib_lib/include
