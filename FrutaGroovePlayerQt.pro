@@ -36,7 +36,6 @@ RESOURCES += \
 
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../taglib_lib/lib/ -ltag
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../taglib_lib/lib/ -ltagd
-
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../taglib_lib/lib/ -ltag
 INCLUDEPATH += $$PWD/../../taglib_lib/include
 DEPENDPATH += $$PWD/../../taglib_lib/include

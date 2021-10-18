@@ -61,7 +61,7 @@ void MusicPlayer::on_actionOpen_Song_triggered()
         return;
     }
     else{
-        fileName = QFileInfo(soundPath).fileName();
+        fileName = QFileInfo(soundPath).filePath();
         mPlayer->setAudioOutput(outputDevice);
         mPlayer->setSource(QUrl::fromLocalFile(soundPath));
     }
