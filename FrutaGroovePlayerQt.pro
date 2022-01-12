@@ -10,11 +10,13 @@ CONFIG += c++11
 
 SOURCES += \
     aboutinfo.cpp \
+    audiothread.cpp \
     main.cpp \
     musicplayer.cpp
 
 HEADERS += \
     aboutinfo.h \
+    audiothread.h \
     musicplayer.h
 
 FORMS += \
@@ -35,7 +37,7 @@ RESOURCES += \
     mainRes.qrc
 
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../taglib_lib/lib/ -ltag
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../taglib_lib/lib/ -ltag
-INCLUDEPATH += $$PWD/../../taglib_lib/include
-DEPENDPATH += $$PWD/../../taglib_lib/include
+win32: LIBS += -L$$PWD/bass24/c/x64/ -lbass
+
+INCLUDEPATH += $$PWD/bass24/c/x64
+DEPENDPATH += $$PWD/bass24/c/x64

@@ -1,16 +1,19 @@
 #include "musicplayer.h"
 #include "ui_musicplayer.h"
+#include "audiothread.h"
 
 MusicPlayer::MusicPlayer(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MusicPlayer)
 {
     ui->setupUi(this);
-    connect(mPlayer, &QMediaPlayer::playbackStateChanged, this, &MusicPlayer::checkPlaybackState);
+    connect(player, &AudioThread::positionChanged, this, &MusicPlayer::updatePositionSlider);
     connect(mPlayer, &QMediaPlayer::mediaStatusChanged, this, &MusicPlayer::checkMediaState);
-    connect(mPlayer, &QMediaPlayer::positionChanged, this, &MusicPlayer::updatePositionSlider);
-    connect(mPlayer, &QMediaPlayer::durationChanged, this, &MusicPlayer::updateDuration);
-    connect(mPlayer, &QMediaPlayer::metaDataChanged, this , &MusicPlayer::updateInfo);
+    connect(player, &AudioThread::endOfPlayback, this, &MusicPlayer::checkMediaState);
+    connect(player, &AudioThread::stateChanged, this, &MusicPlayer::checkPlaybackState);
+    //connect(mPlayer, &QMediaPlayer::positionChanged, this, &MusicPlayer::updatePositionSlider);
+    connect(player, &AudioThread::lengthChanged, this, &MusicPlayer::updateDuration);
+    //connect(mPlayer, &QMediaPlayer::metaDataChanged, this , &MusicPlayer::updateInfo);
     QSettings appSettings("AM_Erizur", "FrutaGroovePlayer");
     if(!appSettings.value("volumeLevel").isValid()){
         ui->volumeSlider->setValue(100);
@@ -47,12 +50,15 @@ static QString formatTime(qint64 timeMilliSeconds)
 }
 
 void MusicPlayer::showStartupMessage(){
-    ui->statusbar->showMessage(startupMessages.at(getRand(0,5)));
+    ui->statusbar->showMessage(startupMessages.at(getRand(0,5)), 5000);
 }
 
 void MusicPlayer::on_actionOpen_Song_triggered()
 {
-    QString soundPath = QFileDialog::getOpenFileName(this,tr("Open Music File"), "", tr("Music Files (*.mp3 *.wav *.flac)"));
+    if(player->loaded == true){
+        player->stop();
+    }
+    QString soundPath = QFileDialog::getOpenFileName(this,tr("Open Audio File"), "", tr("Audio Files (*.mp3 *.wav *.flac *.ogg)"));
     if(isPlaylist == true){
         isPlaylist = false;
         ui->listWidget->clear();
@@ -62,95 +68,85 @@ void MusicPlayer::on_actionOpen_Song_triggered()
     }
     else{
         fileName = QFileInfo(soundPath).filePath();
-        mPlayer->setAudioOutput(outputDevice);
-        mPlayer->setSource(QUrl::fromLocalFile(soundPath));
+        player->playing = false;
     }
 }
 
 void MusicPlayer::checkPlaybackState(){
-    if(mPlayer->playbackState() == QMediaPlayer::PlayingState){
+    if(player->playing == true){
         ui->playButton->setText("Pause");
     }
-    else if(mPlayer->playbackState() == QMediaPlayer::StoppedState || mPlayer->playbackState() == QMediaPlayer::PausedState){
+    else{
         ui->playButton->setText("Play");
     }
 }
 
 void MusicPlayer::on_playButton_clicked()
 {
-    if(mPlayer->mediaStatus() == QMediaPlayer::NoMedia){
-        return;
-    }
-    else if(mPlayer->mediaStatus() == QMediaPlayer::EndOfMedia){
-        if(mPlayer->playbackState() == QMediaPlayer::StoppedState || mPlayer->playbackState() == QMediaPlayer::PausedState){
-            ui->playButton->setText("Pause");
-            mPlayer->play();
-        }
-    }
-    else{
-        if(mPlayer->playbackState() == QMediaPlayer::StoppedState || mPlayer->playbackState() == QMediaPlayer::PausedState){
-            ui->playButton->setText("Pause");
-            mPlayer->play();
-        }
-        else{
-            mPlayer->pause();
-        }
+    if (fileName != ""){
+       if(player->playing == false){
+           if(player->loaded == true){
+               player->resume();
+           }
+           else{
+               player->play(fileName);
+           }
+           float floatVolume = (float)ui->volumeSlider->value() / 100;
+           player->changeVolume(floatVolume);
+           ui->playButton->setText("Pause");
+       }
+       else{
+           player->pause();
+           ui->playButton->setText("Play");
+       }
+
     }
 }
 
 void MusicPlayer::updatePositionSlider(){
-    if(mPlayer->playbackState() == QMediaPlayer::PlayingState){
-        ui->progressSlider->setValue(mPlayer->position());
-        ui->statusbar->showMessage(formatTime(mPlayer->position()) + " / " + formatTime(mPlayer->duration()));
-    }
+    ui->progressSlider->setValue(player->currentPosition());
+    ui->statusbar->showMessage(formatTime(player->currentPosSeconds()) + " / " + formatTime(player->audioLengthSeconds()));
 }
 
 void MusicPlayer::updateDuration(){
-    ui->progressSlider->setMaximum(mPlayer->duration());
+    ui->progressSlider->setMaximum(player->audioLength());
 }
 
-void MusicPlayer::extractExtension(int fileExt){
-
-}
-
-void MusicPlayer::updateInfo()
-{
-    QStringList info;
-    if (!fileName.isEmpty()){
-        TagLib::FileRef f(fileName.toStdString().c_str());
-        TagLib::String artist_string = f.tag()->artist();
-        TagLib::String title_string = f.tag()->title();
-        QString author = QString::fromStdWString(artist_string.toWString());
-        if (!author.isEmpty()){
-            info.append(author);
-        }
-        QString title = QString::fromStdWString(title_string.toWString());
-        if (!title.isEmpty()){
-            info.append(title);
-        }
-        QVariant songCover = mPlayer->metaData().value(QMediaMetaData::CoverArtImage);
-        qInfo() << songCover;
-        if (songCover.isValid()) {
-            QImage coverImage = songCover.value<QImage>();
-            ui->coverImage->setPixmap(QPixmap::fromImage(coverImage));
-        }
-    }
-    ui->songName->setText(info.join(tr(" - ")));
-}
+//void MusicPlayer::updateInfo()
+//{
+//    QStringList info;
+//    if (!fileName.isEmpty()){
+//        TagLib::FileRef f(fileName.toStdString().c_str());
+//        TagLib::String artist_string = f.tag()->artist();
+//        TagLib::String title_string = f.tag()->title();
+//        QString author = QString::fromStdWString(artist_string.toWString());
+//        if (!author.isEmpty()){
+//            info.append(author);
+//        }
+//        QString title = QString::fromStdWString(title_string.toWString());
+//        if (!title.isEmpty()){
+//            info.append(title);
+//        }
+//        QVariant songCover = mPlayer->metaData().value(QMediaMetaData::CoverArtImage);
+//        qInfo() << songCover;
+//        if (songCover.isValid()) {
+//            QImage coverImage = songCover.value<QImage>();
+//            ui->coverImage->setPixmap(QPixmap::fromImage(coverImage));
+//        }
+//    }
+//    ui->songName->setText(info.join(tr(" - ")));
+//}
 
 
 void MusicPlayer::on_volumeSlider_valueChanged(int value)
 {
     float floatVolume = (float)value / 100;
-    outputDevice->setVolume(floatVolume);
+    player->changeVolume(floatVolume);
 }
 
 void MusicPlayer::on_stopButton_clicked()
 {
-    if(mPlayer->playbackState() == QMediaPlayer::PlayingState || mPlayer->playbackState() == QMediaPlayer::PausedState){
-        mPlayer->stop();
-        ui->progressSlider->setValue(0);
-    }
+    player->stop();
 }
 
 
@@ -158,9 +154,14 @@ void MusicPlayer::on_actionOpen_Playlist_triggered()
 {
     if(isPlaylist == true){
         ui->listWidget->clear();
+        for(int idx = 0; idx < song_list.size(); ++idx)
+        {
+            song_list.remove(idx);
+            --idx;
+        }
     }
-    if (mPlayer->playbackState() == QMediaPlayer::PlayingState){
-       mPlayer->stop();
+    if(player->loaded == true){
+        player->stop();
     }
 
     QString filename = QFileDialog::getOpenFileName(this, "Open Playlist File...", "/", "JSON Files (*.json)");
@@ -172,7 +173,6 @@ void MusicPlayer::on_actionOpen_Playlist_triggered()
         QJsonObject pl_entry;
         QJsonArray pl_entries;
         QByteArray json_data;
-        QStringList song_list;
         QFile input(filename);
         if (input.open(QIODevice::ReadOnly | QIODevice::Text)){
             json_data = input.readAll();
@@ -185,8 +185,9 @@ void MusicPlayer::on_actionOpen_Playlist_triggered()
                 foreach (const QString& key, pl_entry.keys()){
                     QJsonValue value = pl_entry.value(key);
                     QString songEntry = value.toString();
+                    QFileInfo fileThingie(songEntry);
                     song_list << songEntry;
-                    ui->listWidget->addItem(songEntry);
+                    ui->listWidget->addItem(fileThingie.baseName());
                     qInfo() << value.toString();
                     songIndex = pl_entries.count() - pl_entries.count();
                     maxIndex = pl_entries.count();
@@ -195,9 +196,9 @@ void MusicPlayer::on_actionOpen_Playlist_triggered()
 
             }
             ui->listWidget->setCurrentRow(songIndex);
-            mPlayer->setAudioOutput(outputDevice);
-            mPlayer->setSource(QUrl::fromLocalFile(ui->listWidget->currentItem()->text()));
+            fileName = song_list.at(songIndex).toLocal8Bit().constData();
             isPlaylist = true;
+            player->playing = false;
         }
     }
 }
@@ -205,41 +206,29 @@ void MusicPlayer::on_actionOpen_Playlist_triggered()
 
 void MusicPlayer::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
 {
-   QString selectedSong = item->text();
-   qInfo() << selectedSong;
-   mPlayer->setSource(QUrl::fromLocalFile(selectedSong));
-   mPlayer->setAudioOutput(outputDevice);
-   mPlayer->play();
+   songIndex = ui->listWidget->row(item);
+   if(player->loaded == true){
+       player->stop();
+   }
+   fileName = song_list.at(songIndex).toLocal8Bit().constData();
+   player->play(fileName);
+   float floatVolume = (float)ui->volumeSlider->value() / 100;
+   player->changeVolume(floatVolume);
 }
 
 
 void MusicPlayer::on_progressSlider_sliderPressed()
 {
-    if(mPlayer->playbackState() == QMediaPlayer::PlayingState){
-        mPlayer->pause();
-        outputDevice->setVolume(0);
+    if(player->loaded == true){
+        player->pause();
     }
 }
 
 
 void MusicPlayer::on_progressSlider_sliderReleased()
 {
-    if(mPlayer->mediaStatus() != QMediaPlayer::NoMedia){
-        if(mPlayer->playbackState() == QMediaPlayer::PausedState || mPlayer->playbackState() == QMediaPlayer::PlayingState ){
-            float floatVolume = (float)ui->volumeSlider->value() / 100;
-            outputDevice->setVolume(floatVolume);
-            mPlayer->play();
-        }
-        else if(mPlayer->playbackState() == QMediaPlayer::StoppedState && ui->progressSlider->value() != ui->progressSlider->maximum()){
-            float floatVolume = (float)ui->volumeSlider->value() / 100;
-            outputDevice->setVolume(floatVolume);
-            mPlayer->play();
-        }
-        else if(mPlayer->playbackState() == QMediaPlayer::StoppedState){
-            float floatVolume = (float)ui->volumeSlider->value() / 100;
-            outputDevice->setVolume(floatVolume);
-            mPlayer->stop();
-        }
+    if(player->loaded == true){
+        player->resume();
     }
 }
 
@@ -252,10 +241,13 @@ void MusicPlayer::on_fowardButton_clicked()
             qInfo() << songIndex;
             qInfo() <<  ui->listWidget->model()->rowCount() - 2;
             ui->listWidget->setCurrentRow(songIndex);
-            QString selectedSong = ui->listWidget->currentItem()->text();
-            mPlayer->setSource(QUrl::fromLocalFile(selectedSong));
-            mPlayer->setAudioOutput(outputDevice);
-            mPlayer->play();
+            if(player->loaded == true){
+                player->stop();
+            }
+            fileName = song_list.at(songIndex).toLocal8Bit().constData();
+            player->play(fileName);
+            float floatVolume = (float)ui->volumeSlider->value() / 100;
+            player->changeVolume(floatVolume);
         }
         else{
             return;
@@ -270,10 +262,13 @@ void MusicPlayer::on_rewindButton_clicked()
         if(songIndex > 0){
             songIndex--;
             ui->listWidget->setCurrentRow(songIndex);
-            QString selectedSong = ui->listWidget->currentItem()->text();
-            mPlayer->setSource(QUrl::fromLocalFile(selectedSong));
-            mPlayer->setAudioOutput(outputDevice);
-            mPlayer->play();
+            if(player->loaded == true){
+                player->stop();
+            }
+            fileName = song_list.at(songIndex).toLocal8Bit().constData();
+            player->play(fileName);
+            float floatVolume = (float)ui->volumeSlider->value() / 100;
+            player->changeVolume(floatVolume);
         }
         else{
             return;
@@ -284,28 +279,48 @@ void MusicPlayer::on_rewindButton_clicked()
 
 void MusicPlayer::on_progressSlider_sliderMoved(int position)
 {
-    if(mPlayer->playbackState() == QMediaPlayer::PausedState || mPlayer->playbackState() == QMediaPlayer::PlayingState){
-        mPlayer->setPosition(position);
-    }
+    qInfo() << position;
+    player->changePosition(position);
 }
 
 void MusicPlayer::checkMediaState(){
-    if(mPlayer->mediaStatus() == QMediaPlayer::EndOfMedia){
-        if(isPlaylist == true){
-            if(songIndex <= ui->listWidget->model()->rowCount() - 2){
-                songIndex++;
-                qInfo() << songIndex;
-                qInfo() <<  ui->listWidget->model()->rowCount() - 2;
-                ui->listWidget->setCurrentRow(songIndex);
-                QString selectedSong = ui->listWidget->currentItem()->text();
-                mPlayer->setSource(QUrl::fromLocalFile(selectedSong));
-                mPlayer->setAudioOutput(outputDevice);
-                mPlayer->play();
+//    if(mPlayer->mediaStatus() == QMediaPlayer::EndOfMedia){
+//        if(isPlaylist == true){
+//            if(songIndex <= ui->listWidget->model()->rowCount() - 2){
+//                songIndex++;
+//                qInfo() << songIndex;
+//                qInfo() <<  ui->listWidget->model()->rowCount() - 2;
+//                ui->listWidget->setCurrentRow(songIndex);
+//                QString selectedSong = ui->listWidget->currentItem()->text();
+//                mPlayer->setSource(QUrl::fromLocalFile(selectedSong));
+//                mPlayer->setAudioOutput(outputDevice);
+//                mPlayer->play();
+//            }
+//            else{
+//                mPlayer->stop();
+//            }
+//        }
+//    }
+    if(isPlaylist == true){
+        if(songIndex <= ui->listWidget->model()->rowCount() - 2){
+            songIndex++;
+            qInfo() << songIndex;
+            qInfo() <<  ui->listWidget->model()->rowCount() - 2;
+            ui->listWidget->setCurrentRow(songIndex);
+            if(player->loaded == true){
+                player->stop();
             }
-            else{
-                mPlayer->stop();
-            }
+            fileName = song_list.at(songIndex).toLocal8Bit().constData();
+            player->play(fileName);
+            float floatVolume = (float)ui->volumeSlider->value() / 100;
+            player->changeVolume(floatVolume);
         }
+        else{
+            return;
+        }
+    }
+    else{
+        player->stop();
     }
 }
 
