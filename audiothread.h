@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QDebug>
 #include <QTimer>
+#include <QTextCodec>
 #include "bass24/c/bass.h"
 
 void __stdcall syncFunc(HSYNC handle, DWORD channel, DWORD data, void *user);
@@ -25,6 +26,7 @@ signals:
     void positionChanged();
     void lengthChanged();
     void stateChanged();
+    void metadataChanged();
 public slots:
     void play(QString filepath);
     void pause();

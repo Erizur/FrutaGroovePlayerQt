@@ -9,6 +9,15 @@
 *.dll
 *.dylib
 
+#Taglib
+/taglib
+
+#Bass Audio Library
+/bass24
+
+#Discord rpc stuff
+/discord_game_sdk
+
 # Qt-es
 object_script.*.Release
 object_script.*.Debug

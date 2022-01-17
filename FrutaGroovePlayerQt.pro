@@ -1,5 +1,4 @@
-QT       += core gui multimedia multimediawidgets
-
+QT       += core gui multimedia multimediawidgets core5compat
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -41,3 +40,14 @@ win32: LIBS += -L$$PWD/bass24/c/x64/ -lbass
 
 INCLUDEPATH += $$PWD/bass24/c/x64
 DEPENDPATH += $$PWD/bass24/c/x64
+
+
+win32: LIBS += -L$$PWD/taglib/lib/ -ltag
+
+INCLUDEPATH += $$PWD/taglib/include
+DEPENDPATH += $$PWD/taglib/include
+
+win32: LIBS += -L$$PWD/discord_game_sdk/lib/x86_64/ -ldiscord_game_sdk.dll
+
+INCLUDEPATH += $$PWD/discord_game_sdk/cpp
+DEPENDPATH += $$PWD/discord_game_sdk/cpp

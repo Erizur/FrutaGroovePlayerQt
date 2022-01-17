@@ -31,6 +31,7 @@ void AudioThread::play(QString filename)
     else
     {
         endOfMusic = false;
+        emit metadataChanged();
         BASS_ChannelPlay(chan, true);
         loaded = true;
         emit lengthChanged();

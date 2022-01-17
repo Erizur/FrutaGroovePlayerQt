@@ -6,11 +6,27 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QFileInfo>
+#include <QLabel>
 #include <QtMultimedia/QMediaPlayer>
 #include <QtMultimedia/QAudio>
 #include <QtMultimedia/QtMultimedia>
+#include <QByteArray>
 #include <aboutinfo.h>
 #include <audiothread.h>
+
+#include <taglib/tag.h>
+#include <taglib/fileref.h>
+#include <taglib/id3v2frame.h>
+#include <taglib/id3v2tag.h>
+#include <taglib/flacpicture.h>
+#include <taglib/flacproperties.h>
+#include <taglib/flacfile.h>
+#include <taglib/oggfile.h>
+#include <taglib/oggflacfile.h>
+#include <taglib/mpegfile.h>
+#include <taglib/id3v2.h>
+#include <taglib/id3v2tag.h>
+#include <taglib/attachedpictureframe.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MusicPlayer; }
@@ -57,7 +73,9 @@ private slots:
 
     void showStartupMessage();
 
-    //void updateInfo();
+    //QImage updateImage(QString path);
+
+    void updateInfo();
 
     void on_volumeSlider_sliderReleased();
 
@@ -71,6 +89,7 @@ private:
     QMediaPlayer *mPlayer = new QMediaPlayer;
     QAudioOutput *outputDevice = new QAudioOutput;
     QStringListModel *model = new QStringListModel;
+    QLabel *label = new QLabel("");
     bool isPlaylist;
     qint64 songIndex;
     qint64 maxIndex;
