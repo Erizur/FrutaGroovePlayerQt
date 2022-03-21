@@ -1,4 +1,4 @@
-QT       += core gui multimedia multimediawidgets core5compat
+QT       += core gui core5compat
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -11,16 +11,30 @@ SOURCES += \
     aboutinfo.cpp \
     audiothread.cpp \
     main.cpp \
-    musicplayer.cpp
+    metadataview.cpp \
+    musicplayer.cpp \
+    playlistsview.cpp \
+    settingsmenu.cpp \
+    titlebar.cpp \
+    windowhandler.cpp
 
 HEADERS += \
     aboutinfo.h \
     audiothread.h \
-    musicplayer.h
+    metadataview.h \
+    musicplayer.h \
+    playlistsview.h \
+    settingsmenu.h \
+    titlebar.h \
+    windowhandler.h
 
 FORMS += \
     aboutinfo.ui \
-    musicplayer.ui
+    metadataview.ui \
+    musicplayer.ui \
+    playlistsview.ui \
+    settingsmenu.ui \
+    windowhandler.ui
 
 TRANSLATIONS += \
     FrutaGroovePlayerQt_en_US.ts
@@ -47,7 +61,7 @@ win32: LIBS += -L$$PWD/taglib/lib/ -ltag
 INCLUDEPATH += $$PWD/taglib/include
 DEPENDPATH += $$PWD/taglib/include
 
-win32: LIBS += -L$$PWD/discord_game_sdk/lib/x86_64/ -ldiscord_game_sdk.dll
+include($$PWD/QSimpleUpdater/QSimpleUpdater.pri)
 
-INCLUDEPATH += $$PWD/discord_game_sdk/cpp
-DEPENDPATH += $$PWD/discord_game_sdk/cpp
+DISTFILES += \
+    shader.vert

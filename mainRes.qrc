@@ -7,6 +7,21 @@
         <file>resources/buttonRewindDark.png</file>
         <file>resources/buttonStopDark.png</file>
         <file>resources/noCover.png</file>
-        <file>resources/aboutFGP.png</file>
+        <file>resources/buttonFowardLight.png</file>
+        <file>resources/buttonPauseLight.png</file>
+        <file>resources/buttonPlayLight.png</file>
+        <file>resources/buttonRewindLight.png</file>
+        <file>resources/buttonStopLight.png</file>
+        <file>resources/volumeDownLight.png</file>
+        <file>resources/volumeLevelDark.png</file>
+        <file>resources/volumeLevelLight.png</file>
+        <file>resources/volumeDownDark.png</file>
+        <file>resources/buttonLoopDark.png</file>
+        <file>resources/buttonLoopLight.png</file>
+        <file>resources/buttonShuffleDark.png</file>
+        <file>resources/buttonShuffleLight.png</file>
+        <file>resources/playlistsIcon.png</file>
+        <file>resources/closeButton.png</file>
+        <file>resources/minimizeButton.png</file>
     </qresource>
 </RCC>

@@ -7,26 +7,32 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QLabel>
-#include <QtMultimedia/QMediaPlayer>
-#include <QtMultimedia/QAudio>
-#include <QtMultimedia/QtMultimedia>
+#include <QPushButton>
 #include <QByteArray>
+#include <QMessageBox>
+#include <QStringListModel>
+#include <QSettings>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 #include <aboutinfo.h>
 #include <audiothread.h>
+#include <windowhandler.h>
+#include <playlistsview.h>
+#include <metadataview.h>
+#include <random>
+#include <QRandomGenerator>
+
+#include <QSimpleUpdater.h>
 
 #include <taglib/tag.h>
 #include <taglib/fileref.h>
-#include <taglib/id3v2frame.h>
-#include <taglib/id3v2tag.h>
 #include <taglib/flacpicture.h>
-#include <taglib/flacproperties.h>
 #include <taglib/flacfile.h>
-#include <taglib/oggfile.h>
-#include <taglib/oggflacfile.h>
-#include <taglib/mpegfile.h>
-#include <taglib/id3v2.h>
 #include <taglib/id3v2tag.h>
 #include <taglib/attachedpictureframe.h>
+#include <taglib/mpegfile.h>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MusicPlayer; }
@@ -41,6 +47,8 @@ public:
     ~MusicPlayer();
 
 private slots:
+    void initializeButtonTheme();
+
     void on_actionOpen_Song_triggered();
 
     void on_playButton_clicked();
@@ -79,23 +87,46 @@ private slots:
 
     void on_volumeSlider_sliderReleased();
 
-    void on_actionPlaylists_Editor_triggered();
-
     void on_actionAbout_triggered();
+
+    void handleError(int code);
+
+    void on_actionLoop_triggered(bool checked);
+
+    void on_actionShuffle_triggered(bool checked);
+
+    void on_volumeSlider_sliderMoved(int position);
+
+    void on_volumeButton_clicked();
+
+    void on_actionPlaylists_triggered();
+
+    void on_actionVisualizer_triggered();
 
 private:
     Ui::MusicPlayer *ui;
     AudioThread *player = new AudioThread;
-    QMediaPlayer *mPlayer = new QMediaPlayer;
-    QAudioOutput *outputDevice = new QAudioOutput;
     QStringListModel *model = new QStringListModel;
     QLabel *label = new QLabel("");
+    QPushButton *shuffleBut = new QPushButton("");
+    QPushButton *loopBut = new QPushButton("");
     bool isPlaylist;
+    bool isLoop;
+    bool isShuffle;
+    bool isMod = false;
     qint64 songIndex;
+    qint64 previousIndex;
     qint64 maxIndex;
     QStringList song_list;
+    QString runtimeFile;
     QString fileName;
+    QString currentTheme = "Light";
+    QMessageBox messageBox;
     aboutInfo *abInf;
-    QStringList startupMessages = {"Teh Bezt Musik!", "What Are You Looking At?!?", "Cherryapple fans, rise up!", "ERROR: NO ERROR", "Long Live The FGP!", "Huh?!!?"};
+    PlaylistsView *playlistsView = new PlaylistsView();
+    MetadataView *metadataView = new MetadataView();
+    WindowHandler *plViewHandler = new WindowHandler();
+    WindowHandler *metaViewHandler = new WindowHandler();
+    QStringList startupMessages = {"Teh Bezt Musik!", "What are you looking at?!?", "8+ year old music folder, rise up again!", "ERROR: JOKING AROUND", "Took me around an entire lifespan...", "Huh?!!?"};
 };
 #endif // MUSICPLAYER_H

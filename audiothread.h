@@ -27,6 +27,7 @@ signals:
     void lengthChanged();
     void stateChanged();
     void metadataChanged();
+    void errorHappened(int code);
 public slots:
     void play(QString filepath);
     void pause();

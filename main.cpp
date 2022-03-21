@@ -1,4 +1,5 @@
 #include "musicplayer.h"
+#include "windowhandler.h"
 
 #include <QApplication>
 #include <QLocale>
@@ -17,7 +18,15 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    MusicPlayer w;
-    w.show();
+    MusicPlayer *musPlayer = new MusicPlayer;
+    WindowHandler winHandler;
+    winHandler.setAttribute(Qt::WA_QuitOnClose, true);
+    winHandler.setTitle(musPlayer->windowTitle());
+    winHandler.setIcon(musPlayer->windowIcon());
+
+    winHandler.setContent(musPlayer);
+    winHandler.setSize(musPlayer->size());
+    winHandler.activateWindow();
+    winHandler.show();
     return a.exec();
 }

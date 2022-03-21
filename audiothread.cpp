@@ -15,8 +15,10 @@ AudioThread::AudioThread(QObject *parent) :
 {
     if (!BASS_Init(-1, 44100, 0, NULL, NULL))
         qDebug() << "Cannot initialize device";
+        emit errorHappened(1);
     if (!BASS_PluginLoad("bassflac.dll", 0) && !BASS_PluginLoad("bassopus.dll", 0))
         qInfo() << "ERROR CODE: " << BASS_ErrorGetCode();
+        emit errorHappened(2);
     t = new QTimer(this);
     connect(t, SIGNAL(timeout()), this, SLOT(signalUpdate()));
     endOfMusic = true;
@@ -25,9 +27,10 @@ AudioThread::AudioThread(QObject *parent) :
 void AudioThread::play(QString filename)
 {
     BASS_ChannelStop(chan);
-    if (!(chan = BASS_StreamCreateFile(false, filename.toLatin1(), 0, 0, BASS_SAMPLE_LOOP))
-        && !(chan = BASS_MusicLoad(false, filename.toLatin1(), 0, 0, BASS_MUSIC_RAMP | BASS_SAMPLE_LOOP, 1)))
-            qDebug() << "Can't play file";
+    if (!(chan = BASS_StreamCreateFile(false, filename.toLatin1(), 0, 0, BASS_SAMPLE_LOOP)) && !(chan = BASS_MusicLoad(false, filename.toLatin1(), 0, 0, BASS_MUSIC_RAMP /*| BASS_SAMPLE_LOOP */ | BASS_MUSIC_PRESCAN, 1))){
+        qDebug() << "Can't play file due to error code: " << BASS_ErrorGetCode();
+        emit errorHappened(3);
+    }
     else
     {
         endOfMusic = false;
@@ -52,8 +55,10 @@ void AudioThread::pause()
 
 void AudioThread::resume()
 {
-    if (!BASS_ChannelPlay(chan, false))
+    if (!BASS_ChannelPlay(chan, false)){
         qDebug() << "Error resuming";
+        emit errorHappened(4);
+    }
     else
     {
         t->start(98);
