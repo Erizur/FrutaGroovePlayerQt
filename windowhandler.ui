@@ -14,16 +14,32 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">#WindowHandler{
-	background:transparent;
-	outline: 10px solid rgb(46, 46, 132);
-}</string>
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="spacing">
+    <number>5</number>
+   </property>
+   <property name="leftMargin">
+    <number>5</number>
+   </property>
+   <property name="topMargin">
+    <number>5</number>
+   </property>
+   <property name="rightMargin">
+    <number>5</number>
+   </property>
+   <property name="bottomMargin">
+    <number>5</number>
+   </property>
    <item>
     <widget class="QWidget" name="winFrame" native="true">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="styleSheet">
-      <string notr="true">#winFrame{background-color:palette(Window);}</string>
+      <string notr="true">#winFrame{background-color:palette(Window);}
+</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <property name="spacing">

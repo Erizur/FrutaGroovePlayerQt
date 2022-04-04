@@ -20,7 +20,7 @@ WindowHandler::WindowHandler(QWidget *parent) :
     windowShadow->setBlurRadius(12.0);
     windowShadow->setColor(palette().color(QPalette::Shadow));
     windowShadow->setOffset(0.0);
-    ui->winFrame->setGraphicsEffect(windowShadow);
+    this->setGraphicsEffect(windowShadow);
 
     QObject::connect(qApp, &QGuiApplication::applicationStateChanged, this, &WindowHandler::appStateChanged);
     setMouseTracking(true);
@@ -38,6 +38,7 @@ void WindowHandler::setContent(QWidget *w) {
 }
 
 void WindowHandler::setSize(QSize size){
+    this->resize(size.width() + 12, size.height() + 12);
     ui->winFrame->setFixedWidth(size.width());
     ui->winFrame->setFixedHeight(size.height() + ui->winTitlebar->size().height());
 }

@@ -55,6 +55,7 @@ win32: LIBS += -L$$PWD/bass24/c/x64/ -lbass
 INCLUDEPATH += $$PWD/bass24/c/x64
 DEPENDPATH += $$PWD/bass24/c/x64
 
+win32:LIBS += -luser32
 
 win32: LIBS += -L$$PWD/taglib/lib/ -ltag
 

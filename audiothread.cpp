@@ -27,7 +27,7 @@ AudioThread::AudioThread(QObject *parent) :
 void AudioThread::play(QString filename)
 {
     BASS_ChannelStop(chan);
-    if (!(chan = BASS_StreamCreateFile(false, filename.toLatin1(), 0, 0, BASS_SAMPLE_LOOP)) && !(chan = BASS_MusicLoad(false, filename.toLatin1(), 0, 0, BASS_MUSIC_RAMP /*| BASS_SAMPLE_LOOP */ | BASS_MUSIC_PRESCAN, 1))){
+    if (!(chan = BASS_StreamCreateFile(false, filename.toLatin1(), 0, 0, BASS_SAMPLE_LOOP)) && !(chan = BASS_MusicLoad(false, filename.toLatin1(), 0, 0, BASS_MUSIC_RAMP /*| BASS_SAMPLE_LOOP */ | BASS_MUSIC_PRESCAN | BASS_MUSIC_STOPBACK, 1))){
         qDebug() << "Can't play file due to error code: " << BASS_ErrorGetCode();
         emit errorHappened(3);
     }
