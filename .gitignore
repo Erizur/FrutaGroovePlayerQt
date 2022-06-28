@@ -10,16 +10,16 @@
 *.dylib
 
 #Taglib
-/taglib
+taglib/
 
 #Bass Audio Library
-/bass24
+bass24/
 
 #Discord rpc stuff
-/discord_game_sdk
+discord_game_sdk/
 
 #QSimpleUpdater
-/QSimpleUpdater
+QSimpleUpdater/
 
 # Qt-es
 object_script.*.Release
