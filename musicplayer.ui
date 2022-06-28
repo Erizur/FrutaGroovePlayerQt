@@ -42,59 +42,12 @@
       <x>10</x>
       <y>10</y>
       <width>356</width>
-      <height>74</height>
+      <height>73</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <widget class="QLabel" name="songName">
-       <property name="maximumSize">
-        <size>
-         <width>367</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="0">
       <layout class="QGridLayout" name="mediaLayout">
-       <item row="0" column="0">
-        <widget class="QSlider" name="progressSlider">
-         <property name="minimumSize">
-          <size>
-           <width>352</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>352</width>
-           <height>15</height>
-          </size>
-         </property>
-         <property name="maximum">
-          <number>100</number>
-         </property>
-         <property name="value">
-          <number>0</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="invertedAppearance">
-          <bool>false</bool>
-         </property>
-         <property name="invertedControls">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="0">
         <layout class="QGridLayout" name="controlsLayout">
          <item row="0" column="0">
@@ -111,6 +64,29 @@
            <property name="icon">
             <iconset resource="mainRes.qrc">
              <normaloff>:/images/resources/buttonRewindLight.png</normaloff>:/images/resources/buttonRewindLight.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>18</width>
+             <height>18</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QPushButton" name="stopButton">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="mainRes.qrc">
+             <normaloff>:/images/resources/buttonStopLight.png</normaloff>:/images/resources/buttonStopLight.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -140,71 +116,6 @@
            <property name="icon">
             <iconset resource="mainRes.qrc">
              <normaloff>:/images/resources/buttonFowardLight.png</normaloff>:/images/resources/buttonFowardLight.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>18</width>
-             <height>18</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="5">
-          <widget class="QSlider" name="volumeSlider">
-           <property name="maximumSize">
-            <size>
-             <width>85</width>
-             <height>15</height>
-            </size>
-           </property>
-           <property name="maximum">
-            <number>100</number>
-           </property>
-           <property name="value">
-            <number>100</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QPushButton" name="stopButton">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>25</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="mainRes.qrc">
-             <normaloff>:/images/resources/buttonStopLight.png</normaloff>:/images/resources/buttonStopLight.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>18</width>
-             <height>18</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QPushButton" name="playButton">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>25</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="mainRes.qrc">
-             <normaloff>:/images/resources/buttonPlayLight.png</normaloff>:/images/resources/buttonPlayLight.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -249,9 +160,98 @@
            </property>
           </widget>
          </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="playButton">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="mainRes.qrc">
+             <normaloff>:/images/resources/buttonPlayLight.png</normaloff>:/images/resources/buttonPlayLight.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>18</width>
+             <height>18</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="5">
+          <widget class="QSlider" name="volumeSlider">
+           <property name="maximumSize">
+            <size>
+             <width>85</width>
+             <height>15</height>
+            </size>
+           </property>
+           <property name="maximum">
+            <number>100</number>
+           </property>
+           <property name="value">
+            <number>100</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
+       <item row="0" column="0">
+        <widget class="QSlider" name="progressSlider">
+         <property name="minimumSize">
+          <size>
+           <width>352</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>352</width>
+           <height>15</height>
+          </size>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>0</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="invertedAppearance">
+          <bool>false</bool>
+         </property>
+         <property name="invertedControls">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
       </layout>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="songName">
+       <property name="maximumSize">
+        <size>
+         <width>367</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -262,7 +262,7 @@
      <x>0</x>
      <y>0</y>
      <width>380</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -345,7 +345,7 @@
   </action>
   <action name="actionVisualizer">
    <property name="text">
-    <string>Metadata</string>
+    <string>Visualizer</string>
    </property>
   </action>
  </widget>

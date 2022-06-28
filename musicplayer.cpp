@@ -27,9 +27,11 @@ MusicPlayer::MusicPlayer(QWidget *parent)
     loopBut->setCheckable(true);
     shuffleBut->setFixedSize(QSize(25, 25));
     loopBut->setFixedSize(QSize(25, 25));
+
     showStartupMessage();
     ui->volumeSlider->setValue(appSettings.value("volumeLevel").toInt());
     initializeButtonTheme();
+
     int my_argc = qApp->arguments().count();
     if(my_argc >= 2){
         runtimeFile = qApp->arguments().at(1);
@@ -163,42 +165,42 @@ void MusicPlayer::updateDuration(){
 //WIP!
 //For anybody who knows C++ and knows how to use TagLib and Qt, please help me fix this big issue I have, I would be really happy.
 
-QImage updateImage(QString path){
-    QFileInfo songExt(path);
-    if(songExt.exists() == true){
-        if(songExt.completeSuffix() == "flac"){
-            QImage coverArt;
-            TagLib::FLAC::File *flacFile = new TagLib::FLAC::File(path.toLatin1().toStdString().c_str());
-            TagLib::List<TagLib::FLAC::Picture*> picList = flacFile->pictureList();
-            if(picList.isEmpty()){
-                return coverArt;
-            }
-            else{
-                TagLib::FLAC::Picture *mainPic = picList[0];
-                coverArt.loadFromData(QByteArray(mainPic->data().data(), mainPic->data().size()));
-                return coverArt;
-            }
-        }
-        else if(songExt.completeSuffix() == "mp3"){
-            QImage coverArt;
-            TagLib::MPEG::File *mpFile = new TagLib::MPEG::File(path.toLatin1().toStdString().c_str());
-            TagLib::ID3v2::Tag *m_tag = mpFile->ID3v2Tag();
-            auto frameList = m_tag->frameList("APIC");
-            if (m_tag && !frameList.isEmpty()){
-                TagLib::ID3v2::AttachedPictureFrame *coverImg = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(frameList.front());
-                if(coverArt.loadFromData((const uchar *)coverImg->picture().data(), coverImg->picture().size())){
-                    qInfo() << "Image did load!";
-                    return coverArt;
-                }
-            }
-            else{
-                return coverArt;
-            }
-            delete mpFile;
-        }
-    }
-    return QImage();
-}
+//QImage updateImage(QString path){
+//    QFileInfo songExt(path);
+//    if(songExt.exists() == true){
+//        if(songExt.completeSuffix() == "flac"){
+//            QImage coverArt;
+//            TagLib::FLAC::File *flacFile = new TagLib::FLAC::File(path.toLatin1().toStdString().c_str());
+//            TagLib::List<TagLib::FLAC::Picture*> picList = flacFile->pictureList();
+//            if(picList.isEmpty()){
+//                return coverArt;
+//            }
+//            else{
+//                TagLib::FLAC::Picture *mainPic = picList[0];
+//                coverArt.loadFromData(QByteArray(mainPic->data().data(), mainPic->data().size()));
+//                return coverArt;
+//            }
+//        }
+//        else if(songExt.completeSuffix() == "mp3"){
+//            QImage coverArt;
+//            TagLib::MPEG::File *mpFile = new TagLib::MPEG::File(path.toLatin1().toStdString().c_str());
+//            TagLib::ID3v2::Tag *m_tag = mpFile->ID3v2Tag();
+//            auto frameList = m_tag->frameList("APIC");
+//            if (m_tag && !frameList.isEmpty()){
+//                TagLib::ID3v2::AttachedPictureFrame *coverImg = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(frameList.front());
+//                if(coverArt.loadFromData((const uchar *)coverImg->picture().data(), coverImg->picture().size())){
+//                    qInfo() << "Image did load!";
+//                    return coverArt;
+//                }
+//            }
+//            else{
+//                return coverArt;
+//            }
+//            delete mpFile;
+//        }
+//    }
+//    return QImage();
+//}
 
 void MusicPlayer::updateInfo()
 {
@@ -593,14 +595,3 @@ void MusicPlayer::on_actionPlaylists_triggered()
     plViewHandler->setSize(playlistsView->size());
     plViewHandler->show();
 }
-
-
-void MusicPlayer::on_actionVisualizer_triggered()
-{
-    metaViewHandler->setTitle(metadataView->windowTitle());
-    metaViewHandler->setIcon(metadataView->windowIcon());
-    metaViewHandler->setContent(metadataView);
-    metaViewHandler->setSize(metadataView->size());
-    metaViewHandler->show();
-}
-

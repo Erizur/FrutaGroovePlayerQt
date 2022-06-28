@@ -17,20 +17,7 @@
    <iconset resource="mainRes.qrc">
     <normaloff>:/images/resources/playlistsIcon.png</normaloff>:/images/resources/playlistsIcon.png</iconset>
   </property>
-  <widget class="QPushButton" name="pushButton">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>400</y>
-     <width>75</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="saveButton">
    <property name="geometry">
     <rect>
      <x>240</x>
@@ -43,7 +30,7 @@
     <string>Save</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
+  <widget class="QPushButton" name="openButton">
    <property name="geometry">
     <rect>
      <x>320</x>

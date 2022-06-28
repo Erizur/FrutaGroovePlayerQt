@@ -8,7 +8,7 @@ WindowHandler::WindowHandler(QWidget *parent) :
     ui(new Ui::WindowHandler)
 {
     ui->setupUi(this);
-    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
     #if defined(Q_OS_WIN)
         setWindowFlags(windowFlags() | Qt::WindowMinimizeButtonHint);
     #endif
@@ -16,11 +16,13 @@ WindowHandler::WindowHandler(QWidget *parent) :
     setAttribute(Qt::WA_TranslucentBackground);
     setAttribute(Qt::WA_QuitOnClose, false); //by default, can be enabled again
 
-    QGraphicsDropShadowEffect *windowShadow = new QGraphicsDropShadowEffect;
-    windowShadow->setBlurRadius(12.0);
-    windowShadow->setColor(palette().color(QPalette::Shadow));
-    windowShadow->setOffset(0.0);
-    this->setGraphicsEffect(windowShadow);
+//    QGraphicsDropShadowEffect *windowShadow = new QGraphicsDropShadowEffect;
+//    windowShadow->setBlurRadius(12);
+//    windowShadow->setColor(palette().color(QPalette::Shadow));
+//    windowShadow->setOffset(0.0);
+//    this->setGraphicsEffect(windowShadow);
+
+    this->layout()->setContentsMargins(1,1,1,1);
 
     QObject::connect(qApp, &QGuiApplication::applicationStateChanged, this, &WindowHandler::appStateChanged);
     setMouseTracking(true);
@@ -38,7 +40,7 @@ void WindowHandler::setContent(QWidget *w) {
 }
 
 void WindowHandler::setSize(QSize size){
-    this->resize(size.width() + 12, size.height() + 12);
+    this->resize(size.width(), size.height() + 12);
     ui->winFrame->setFixedWidth(size.width());
     ui->winFrame->setFixedHeight(size.height() + ui->winTitlebar->size().height());
 }

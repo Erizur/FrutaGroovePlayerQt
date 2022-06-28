@@ -14,11 +14,11 @@ class AudioThread : public QThread
     Q_OBJECT
 public:
     explicit AudioThread(QObject *parent = 0);
+    unsigned long chan;
     bool playing;
     bool loaded;
     void run();
 private:
-    unsigned long chan;
     QTimer *t;
 signals:
     void endOfPlayback();

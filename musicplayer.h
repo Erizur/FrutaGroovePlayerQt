@@ -19,7 +19,6 @@
 #include <audiothread.h>
 #include <windowhandler.h>
 #include <playlistsview.h>
-#include <metadataview.h>
 #include <random>
 #include <QRandomGenerator>
 
@@ -101,8 +100,6 @@ private slots:
 
     void on_actionPlaylists_triggered();
 
-    void on_actionVisualizer_triggered();
-
 private:
     Ui::MusicPlayer *ui;
     AudioThread *player = new AudioThread;
@@ -124,9 +121,7 @@ private:
     QMessageBox messageBox;
     aboutInfo *abInf;
     PlaylistsView *playlistsView = new PlaylistsView();
-    MetadataView *metadataView = new MetadataView();
     WindowHandler *plViewHandler = new WindowHandler();
-    WindowHandler *metaViewHandler = new WindowHandler();
     QStringList startupMessages = {"Teh Bezt Musik!", "What are you looking at?!?", "8+ year old music folder, rise up again!", "ERROR: JOKING AROUND", "Took me around an entire lifespan...", "Huh?!!?"};
 };
 #endif // MUSICPLAYER_H

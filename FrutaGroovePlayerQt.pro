@@ -11,7 +11,6 @@ SOURCES += \
     aboutinfo.cpp \
     audiothread.cpp \
     main.cpp \
-    metadataview.cpp \
     musicplayer.cpp \
     playlistsview.cpp \
     settingsmenu.cpp \
@@ -21,7 +20,6 @@ SOURCES += \
 HEADERS += \
     aboutinfo.h \
     audiothread.h \
-    metadataview.h \
     musicplayer.h \
     playlistsview.h \
     settingsmenu.h \
@@ -30,7 +28,6 @@ HEADERS += \
 
 FORMS += \
     aboutinfo.ui \
-    metadataview.ui \
     musicplayer.ui \
     playlistsview.ui \
     settingsmenu.ui \
@@ -63,6 +60,3 @@ INCLUDEPATH += $$PWD/taglib/include
 DEPENDPATH += $$PWD/taglib/include
 
 include($$PWD/QSimpleUpdater/QSimpleUpdater.pri)
-
-DISTFILES += \
-    shader.vert
