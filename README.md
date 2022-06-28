@@ -1,4 +1,4 @@
-![FGP Main Image](in_image.png) "Simple Music Player.").
+![FGP Main Image](in_image.png)).
 
 # About
 This is the source code for FrutaGroove Player, the Qt rewrite of the classic version which you can find [here](https://github.com/Erizur/FrutaGroovePlayer).
